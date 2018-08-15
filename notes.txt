@@ -1,0 +1,201 @@
+Week1
+Arrays and Linked-Lists
+
+	Arrays have O(1) time for accessing elements
+	but linear O(n) time for adding/removing an element from the front.
+	
+	LL are O(n) time to access / find elements
+	but are constant O(1) time for adding or removing or accessing elements from the front
+		Or adding after a specific element (provided you have already found it)
+		(for removing or accessing other elements in the list operations are O(n) for singly linked
+			(however with a tail pushing and accessing the back of the list is constant time)
+		for doubly linked (popping from the back also becomes constant time)
+
+	So Linked Lists are good when inserting or removing from the front is important
+	(for example a Stack)
+
+Stacks and Queues
+	Stacks (aka lifo queues)
+	Last in First out
+	implement with a linked list using head as the top of the stack, insert new items in the front of the list.
+	
+	Queues:
+	First in First Out
+	An array can be an effective queue using 2 variables to keep track of the read and write locations
+	of the array and circling them around. (However the array would need a maximum size)
+
+Trees:
+	evaluating arithmetic expressions as tree would use "post order traversal" where all children are 
+	visited first before visiting the parents.
+
+	Depth-first(pre-order, in-order, post-order): completely traverse one sub tree before moving to siblings(using a Stack to save 
+	information about where we are in the stack)
+
+	Breadth-first: completely traverse all nodes at one level before progressing to next level
+	(using a queue) (did not use a recursive solution)
+
+	In order traversal: recursive on binary search tree traverse all the way to bottom of tree and 
+		print child then go back and print the parent then print the right then back.
+		so since binary search is: leftchild < parent < right child. this prints the 
+		tree values "in order".
+
+
+Week2
+Dynamic Arrays:
+	Static array: int my_array[100];
+		(the usual stuck at n = 100)
+	Dynamically-Allocated Arrays: int *my_array = new int[size];
+		(can specify size of array at runtime with 'new' keyword [C++])
+
+	Dynamic Arrays(aka resizable arrays):
+		store a pointer to a dynamically-allocated array and replace it with a newly-allocated array 
+		as needed.
+		
+		operations include: 
+			Get(i): returns element at index i
+			Set(i,val): sets element i to val
+			PushBack(val): adds val to end
+			Remove(i): Removes element at index i
+			Size(): find how many elements
+
+
+Amortized Analysis:(using pushback to a dynamic array as an example use case for analysis)
+	Amortized cost function: given a sequence of n operations-- 
+					Costof(n operations)
+amortized cost =	--------------
+						  n
+	Aggregate:
+		c_i = 1+ |(if(i-1 is a power of 2): <= i-1
+				 |else: <= 0
+
+		sum((i=1..n) of c_i)
+		---------------
+		      n
+	flatten/formulate a prediction summarizing best fit for c_i
+		for n: each operation costs at least 1 so [n +] represents operation costs if array is not full
+		for summation: each operation which is a power of 2 (since a full array is doubled in size) 
+			and costs i-1 (round down for the log formula below)
+			which are items which can be identified by formula sum(j=1..log_2(n-1) of 2^j)
+
+	=>  n + sum(j=1..log_2(n-1) of 2^j
+		------------------------------
+		              n
+
+	=> O(n)/n => O(1)
+
+
+	Banker
+	Physisist(Potential function)
+
+
+Week3
+Priority Queues: generalization of the regular Queue data structure
+	pushBack and popfront => insert(i) extractMax()
+	no beginning or end of queue just priority values
+	popping entails finding item with the maximum priority value
+
+	additional operations: remove(iterator), getmaxval(), changepriority(iterator,priority) 
+	
+	examples: dijsktras, prims, huffmans, heapsort
+
+	naive priority queues (more like a regular queue) 
+		unsorted:
+			extract max = O(n)
+			insert = O(1)
+		sorted:
+			extract max = O(1)
+			insert = O(n)
+
+	priority queue commonly implemented as or using a "binary max heap" (is a binary tree)(can also be a min heap)
+		Definition: each node is >= the values of its children
+			for each edge the parent value is >= the child value
+
+		operations: 
+			get_max
+			insert : at the leftmost element on the last level
+			sift_up
+			extract_max
+			sift_down
+			change_priority
+			remove
+
+		siftup(i):
+			while i>1 and H[Parent(i)] < H[i]:
+				swap(H[Parent(i)], H[i])
+				i = Parent(i)
+		if the parent is < than the child swap them 
+
+		siftdown(i):
+			maxIndex = i
+			l = LeftChild(i)
+			if l<= size and H[l] > H[maxIndex]:
+				maxIndex = l
+			r = RightChild(i)
+			if r<= size and H[r] > H[maxIndex]:
+				maxIndex = r
+			if i != maxIndex:
+				swap(H[i], H[maxIndex])
+				SiftDown(maxIndex)
+
+		check if there is a left and right child and which is larger
+		then check if the current node (i) is the largest
+		if not swap it with the larger of the two children 
+
+
+
+		Shallow trees are desirable since most of the above operations run in O(n) time 
+		
+		Complete binary trees are defined as a binary tree in which all levels are filled except 
+		possibly the last one which is filled from left -> right.
+		
+		Lemma: a complete binary tree with n nodes has a height at most O(log n)
+
+		storing from left to right with full intermediate nodes allows for storing as an array
+		index of parent_i = floor(i/2)
+		index of leftchild_i = 2i
+		index of rightchild_i = 2i+1
+
+		0based array:
+		index of parent_i = floor(i-1/2)
+		index of leftchild_i = 2i+1
+		index of rightchild_i = 2i+2
+
+		insert and extract_match (remove) changes the shape of the tree
+		all other operations do not
+
+Buildheap:
+size = n
+for i from floor(n/2) to 1:
+	SiftDown(i)
+
+using floor(n/2) since the lowest row of the tree cannot violate the structure
+
+Heap sort:
+	repair an array into a heap; then getmax on it repeatedly creating the sorted array 
+	running time O(nlogn)
+
+	intrasort: uses quicksort first if it takes too long switches to heapsort which gaurauntees O(nlogn)
+
+
+Disjoint sets:
+
+	operation: 
+		makeset(x) creates a singleton set {x}
+		find(x) returns ID of the set containing x;
+			if x and y are in the same set Find(x) == Find(y) => true
+		Union(x,y) merges two sets containing x and y
+		
+		kruskal algorithm builds a network using disjoint sets
+
+	iterated log: denoted log* n
+		Def: The number of times the logarithm (binary) needs
+		to be applied to n before the result is <=1
+
+		ie. log*1 = 0
+			log*2 = 1
+			log*3 = 2
+			log*4 = 2
+
+		 
+
+	

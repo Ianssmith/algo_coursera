@@ -1,0 +1,10 @@
+*.pdf
+*.java
+*.rb
+*.kt
+*.hs
+*.scala
+*.js
+*.rs
+*.cs
+tests/
